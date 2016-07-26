@@ -1,54 +1,35 @@
 "use strict";
 
 const fabric = require('fabric').fabric
-
 const canvas = new fabric.Canvas('canvas')
+const factory = require('./lib/factory')
 
 let currentPlayer;
 let towns;
 
+const gap = factory.options.town.radius
+            + (factory.options.town.borderSize - 1) / 2
+            - factory.options.player.radius
+
+console.log(gap)
 canvas.on('mouse:up', (options) => {
   if (towns.includes(options.target)) {
     const town = options.target
     if (town !== currentPlayer.town) {
-      currentPlayer.animate('left',town.left + 11, {
-        onChange: () => {
-          canvas.renderAll()
-          currentPlayer.town = town
-        }
+      currentPlayer.animate({
+        'left': town.left + gap,
+        'top': town.top + gap
+      }, {
+        onChange: canvas.renderAll.bind(canvas),
+        onComplete: () => currentPlayer.town = town
       })
     }
   }
 })
 
-function createTown(x, y) {
-  const town = new fabric.Circle({
-    radius: 40,
-    fill: undefined,
-    stroke: 'black',
-    strokeWidth: 3,
-    left: x,
-    top: y,
-    selectable: false
-  })
-
-  return town;
-}
-
-function createPlayer(color, town) {
-  return new fabric.Circle({
-    radius: 30,
-    fill: color,
-    selectable: false,
-    left: town.left + 11,
-    top: town.top + 11,
-    town: town
-  })
-}
-
-const leipzig = createTown(50,50)
-const tennenlohe = createTown(200,50)
-const max = createPlayer('blue', leipzig)
+const leipzig = factory.createTown(50,50)
+const tennenlohe = factory.createTown(200,100)
+const max = factory.createPlayer('blue', leipzig)
 
 towns = [leipzig, tennenlohe]
 currentPlayer = max
