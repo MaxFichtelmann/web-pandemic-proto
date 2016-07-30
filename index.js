@@ -3,6 +3,7 @@
 const fabric = require('fabric').fabric
 const canvas = new fabric.Canvas('canvas')
 const factory = require('./lib/factory')
+const elm = Elm.Experiment.worker();
 
 let currentPlayer;
 let towns;
@@ -21,7 +22,10 @@ canvas.on('mouse:up', (options) => {
         'top': town.top + gap
       }, {
         onChange: canvas.renderAll.bind(canvas),
-        onComplete: () => currentPlayer.town = town
+        onComplete: () => {
+          currentPlayer.town = town
+          elm.ports.js2elm.send("123")
+        }
       })
     }
   }
