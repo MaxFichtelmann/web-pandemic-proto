@@ -1,4 +1,4 @@
-port module Experiment exposing (..)
+port module Main exposing (..)
 
 import Html exposing (..)
 import Html.App as App
@@ -30,7 +30,7 @@ subscriptions : Model -> Sub Msg
 subscriptions model = js2elm MsgFromJS
 
 update : Msg -> Model -> (Model, Cmd Msg)
-update (MsgFromJS str) model = ( log "experiment: " str, Cmd.none )
+update (MsgFromJS str) model = ( log "elm" str, Cmd.none )
 
 view : Model -> Html Msg
 view model = div [] []

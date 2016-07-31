@@ -3,7 +3,7 @@
 const fabric = require('fabric').fabric
 const canvas = new fabric.Canvas('canvas')
 const factory = require('./lib/factory')
-const elm = Elm.Experiment.worker();
+const elm = Elm.Main.worker();
 
 let currentPlayer;
 let towns;

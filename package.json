@@ -2,19 +2,27 @@
   "name": "web-pandemic-proto",
   "version": "0.0.1",
   "description": "prototype for pandemic inspired implementation using web technologies",
-  "main": "index.js",
+  "main": "app/index.html",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "postinstall": "mkdirp build && browserify index.js -o build/index.js",
-    "watch": "watchify index.js -o build/index.js",
-    "livereload": "livereload ."
+    "postinstall": "mkdirp app/js && npm run browserify && npm run elm",
+    "watch": "watchify js/index.js -o app/js/index.js",
+    "livereload": "livereload app/ -w 200",
+    "browserify": "browserify js/index.js -o app/js/index.js",
+    "elm": "elm make elm/Main.elm --output=app/js/elm.js --yes",
+    "elm-watch": "chokidar 'elm/**/*.elm' -c 'npm run elm' --initial",
+    "clean":"rimraf app/js",
+    "mrproper":"npm run clean && rimraf node_modules elm-stuff"
   },
   "author": "",
+  "license": "MIT",
   "dependencies": {
+    "elm": "^0.17.1",
     "fabric": "^1.6.3"
   },
   "devDependencies": {
     "browserify": "^13.1.0",
+    "chokidar-cli": "^1.2.0",
     "livereload": "^0.5.0",
     "mkdirp": "^0.5.1",
     "watchify": "^3.7.0"
