@@ -3,40 +3,96 @@
 const fabric = require('fabric').fabric
 const canvas = new fabric.Canvas('canvas')
 const factory = require('./lib/factory')
-const elm = Elm.Main.worker();
+const elm = Elm.Main.worker()
 
-let currentPlayer;
-let towns;
+const fakeElm = {
+  channels: {},
+  subscribe: function(channel, callback) {
+    this.channels[channel] = callback
+  },
+  emit: function(channel, ...data) {
+    this.channels[channel](...data)
+  }
+}
 
-const gap = factory.options.town.radius
-            + (factory.options.town.borderSize - 1) / 2
-            - factory.options.player.radius
+const towns = {}
+const players = {}
 
-console.log(gap)
 canvas.on('mouse:up', (options) => {
-  if (towns.includes(options.target)) {
-    const town = options.target
-    if (town !== currentPlayer.town) {
-      currentPlayer.animate({
-        'left': town.left + gap,
-        'top': town.top + gap
-      }, {
-        onChange: canvas.renderAll.bind(canvas),
-        onComplete: () => {
-          currentPlayer.town = town
-          elm.ports.js2elm.send("123")
-        }
-      })
+  if(options.target) {
+    fakeElm.emit('click', options.target.type, options.target.id)
+  }
+})
+
+fakeElm.subscribe('town:create', (name, x, y) => {
+  const town = factory.createTown(x, y)
+  town.id = name
+  town.type = 'town'
+  canvas.add(town)
+  towns[name] = town
+})
+
+fakeElm.subscribe('player:create', (name, color, startTown) => {
+  const player = factory.createPlayer(color, towns[startTown])
+  player.id = name
+  player.type = 'player'
+  canvas.add(player)
+  players[name] = player
+})
+
+fakeElm.subscribe('player:move', (playerName, townName) => {
+  const town = towns[townName]
+  players[playerName].animate({
+    'left': town.left + factory.options.gap,
+    'top': town.top + factory.options.gap
+  }, {
+    onChange: canvas.renderAll.bind(canvas),
+    onComplete: () => {
+      fakeElm.emit('player:moved', playerName, townName)
+    }
+  })
+})
+
+// logic to be moved to elm below
+
+let currentPlayer = 'max';
+const elmModel = {
+  towns: {
+    leipzig: {
+      x:1, y:1
+    },
+    tennenlohe: {
+      x:4, y:2
+    }
+  },
+  players: {
+    max: {
+      color: 'blue',
+      town: 'leipzig'
+    }
+  }
+}
+
+Object.keys(elmModel.towns).forEach(function(name) {
+  const town = elmModel.towns[name]
+  fakeElm.emit('town:create', name, town.x, town.y)
+});
+
+Object.keys(elmModel.players).forEach(function(name) {
+  const player = elmModel.players[name]
+  fakeElm.emit('player:create', name, player.color, player.town)
+});
+
+fakeElm.subscribe('click', (type, id) => {
+  if (type === 'town' ) {
+    const town = towns[id]
+    if (id !== elmModel.players[currentPlayer].town) {
+      fakeElm.emit('player:move', currentPlayer, id)
     }
   }
 })
 
-const leipzig = factory.createTown(50,50)
-const tennenlohe = factory.createTown(200,100)
-const max = factory.createPlayer('blue', leipzig)
-
-towns = [leipzig, tennenlohe]
-currentPlayer = max
-
-towns.forEach(town => canvas.add(town))
-canvas.add(currentPlayer)
+fakeElm.subscribe('player:moved', (playerName, townName) => {
+  elmModel.players[playerName].town = townName
+  console.log(`moved ${playerName} to ${townName}`)
+})

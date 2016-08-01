@@ -1,16 +1,23 @@
 const fabric = require('fabric').fabric
 
+const SCALE = 50;
+
 const options = {
   town: {
-    radius: 40,
+    radius: SCALE * 4/5,
     borderSize: 3,
     borderColor: 'black',
     color: 'palegreen'
   },
   player: {
-    radius: 30
+    radius: SCALE * 3/5
   }
 }
+
+const GAP = options.town.radius
+            + (options.town.borderSize - 1) / 2
+            - options.player.radius
+options.gap = GAP;
 
 module.exports = {
   options: options,
@@ -20,20 +27,19 @@ module.exports = {
       fill: options.town.color,
       stroke: options.town.borderColor,
       strokeWidth: options.town.borderSize,
-      left: x,
-      top: y,
+      left: x * SCALE,
+      top: y * SCALE,
       selectable: false
     })
   },
 
   createPlayer: (color, town) => {
     return new fabric.Circle({
-      radius: 30,
+      radius: options.player.radius,
       fill: color,
       selectable: false,
-      left: town.left + 11,
-      top: town.top + 11,
-      town: town
+      left: town.left + GAP,
+      top: town.top + GAP
     })
   }
 }
