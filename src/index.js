@@ -2,7 +2,7 @@
 
 const fabric = require('fabric').fabric
 const canvas = new fabric.Canvas('canvas')
-const factory = require('./lib/factory')
+const factory = require('./canvas/factory')
 
 let currentPlayer;
 let towns;
