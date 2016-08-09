@@ -5,18 +5,21 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "postinstall": "mkdirp app/js && browserify src/index.js -o app/js/index.js",
+    "postinstall": "typings install && npm run build",
+    "build": "tsc && mkdirp app/js && browserify index.js -o app/js/index.js",
     "watch": "watchify src/index.js -o app/js/index.js",
     "livereload": "livereload ."
   },
   "author": "",
   "dependencies": {
-    "fabric": "^1.6.3"
+    "fabric": "^1.6.3",
+    "wolfy87-eventemitter": "^5.1.0"
   },
   "devDependencies": {
     "browserify": "^13.1.0",
     "livereload": "^0.5.0",
     "mkdirp": "^0.5.1",
+    "tsify": "^1.0.3",
     "watchify": "^3.7.0"
   }
 }
