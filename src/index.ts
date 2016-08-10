@@ -12,11 +12,17 @@ const cities = {
         name: 'Tennenlohe',
         x: 4,
         y: 2
+    },
+    atlanta: {
+        name: 'Atlanta',
+        x: 2,
+        y: 5
     }
 }
 
-ui.addCity(cities.leipzig)
-ui.addCity(cities.tennenlohe)
+for (const cityName of Object.keys(cities)) {
+    ui.addCity(cities[cityName]);
+}
 
 ui.addPlayer({
     name: 'Max',
