@@ -5,33 +5,55 @@ import * as ui from './canvas/ui'
 const cities = {
     leipzig: {
         name: 'Leipzig',
-        x: 1,
-        y: 1
+        x: 12,
+        y: 10
     },
     tennenlohe: {
         name: 'Tennenlohe',
-        x: 4,
-        y: 2
+        x: 10,
+        y: 14
     },
-    atlanta: {
-        name: 'Atlanta',
-        x: 2,
-        y: 5
+    berlin: {
+        name: 'Berlin',
+        x: 14,
+        y: 6
+    },
+    hamburg: {
+        name: 'Hamburg',
+        x: 9,
+        y: 4
+    },
+    essen: {
+        name: 'Essen',
+        x: 4,
+        y: 9
+    },
+    karlsruhe: {
+        name: 'Karlsruhe',
+        x: 6,
+        y: 15
+    },
+    muenchen: {
+        name: 'M\u00fcnchen',
+        x: 11,
+        y: 18
     }
 }
 
-for (const cityName of Object.keys(cities)) {
-    ui.addCity(cities[cityName]);
-}
-
-ui.addPlayer({
+const max = {
     name: 'Max',
     color: 'blue'
-}, cities.leipzig)
+}
 
-ui.events.on('click:city', city => {
-    ui.movePlayer('Max', city)
-        .then(() => console.log('moved player to', city))
-})
+for (const cityName of Object.keys(cities)) {
+    const city = cities[cityName]
+    ui.addCity(city, () => {
+        ui.movePlayer(max, city)
+            .then(() => console.log('moved player to', city))
+    });
+}
+
+ui.addPlayer(max, cities.leipzig)
+
 
 console.log('created cities')

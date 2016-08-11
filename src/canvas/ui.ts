@@ -1,58 +1,64 @@
-import {City, Player} from '../Models'
+import {City, Player, CityName, PlayerName} from '../Models'
 import {createCity, createPlayer, options} from './factory'
-import * as EventEmitter from 'wolfy87-eventemitter'
 
-const cities = {}
-const players = {}
+class UiCity {
+    shape: fabric.IObject
+    name: CityName
+    onClick: () => void
+}
+
+class UiPlayer {
+    shape: fabric.IObject
+    name: PlayerName
+}
+
+const cities: Array<UiCity> = []
+const players: Array<UiPlayer> = []
 
 const canvas = new fabric.Canvas('canvas')
 
-export const events = new EventEmitter()
-
-canvas.on('mouse:up', (options) => {
-    if (options.target) {
-        const city = Object.keys(cities).find(
-            name => cities[name] === options.target
-        )
-        if (city) {
-            events.emitEvent('click:city', [city])
-        }
-    }
-})
-
-export function addCity(city: City): Promise<City> {
+export function addCity(city: City, onClick: () => void): Promise<City> {
     return new Promise((resolve, reject) => {
-        const item = createCity(city)
-        console.log('created', item)
-        cities[city.name] = item
+        const shape = createCity(city)
+        cities.push({
+            shape,
+            onClick,
+            name: city.name    
+        })
 
-        canvas.add(item)
+        shape.on('mouseup', onClick)
+
+        canvas.add(shape)
         resolve(city)
     })
 }
 
-export function addPlayer(player: Player, city: City): Promise<Player> {
+export function addPlayer(player: Player, city: City): Promise<{}> {
     return new Promise((resolve, reject) => {
-        const item = createPlayer(player, city)
-        players[player.name] = item
+        const shape = createPlayer(player, city)
+        players.push({
+            shape,
+            name: player.name
+        })
+        players[player.name] = shape
 
-        canvas.add(item)
-        resolve(player)
+        canvas.add(shape)
+        resolve()
     })
 }
 
-export function movePlayer(playerName: string, cityName: string): Promise<string> {
+export function movePlayer(player: Player, city: City): Promise<{}> {
     return new Promise((resolve, reject) => {
-        const city = cities[cityName]
-        const player = players[playerName]
+        const cityShape = cities.find(c => c.name === city.name).shape
+        const playerShape = players.find(p => p.name === player.name).shape
 
-        player.animate({
-            'left': city.left + options.gap,
-            'top': city.top + options.gap
+        playerShape.animate({
+            'left': cityShape.left + options.gap,
+            'top': cityShape.top + options.gap
         }, {
                 onChange: canvas.renderAll.bind(canvas),
                 onComplete: () => {
-                    resolve(cityName)
+                    resolve()
                 }
             }
         )

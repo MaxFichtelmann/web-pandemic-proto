@@ -1,18 +1,18 @@
 import {Player, City} from '../Models'
 
 export const options = {
-  scale: 50,
+  scale: 25,
   city: {
     get radius() {
-      return options.scale * 4 / 5
+      return options.scale * 2 / 5
     },
-    borderSize: 3,
+    borderSize: 1,
     borderColor: 'black',
     color: 'palegreen'
   },
   player: {
     get radius() {
-      return options.scale * 3 / 5
+      return options.scale * 3 / 10
     }
   },
   get gap() {
@@ -22,19 +22,31 @@ export const options = {
   }
 }
 
-export function createCity(city: City): fabric.ICircle {
-  return new fabric.Circle({
+export function createCity(city: City): fabric.IObject {
+  const circle = new fabric.Circle({
     radius: options.city.radius,
     fill: options.city.color,
     stroke: options.city.borderColor,
     strokeWidth: options.city.borderSize,
+    originX: 'right',
+    originY: 'bottom'
+  })
+
+  const text = new fabric.Text(city.name, {
+    originX: 'left',
+    originY: 'center',
+    fontFamily: 'sans',
+    fontSize: 10
+  })
+
+  return new fabric.Group([circle, text], {
     left: city.x * options.scale,
     top: city.y * options.scale,
     selectable: false
   })
 }
 
-export function createPlayer(player: Player, city: City): fabric.ICircle {
+export function createPlayer(player: Player, city: City): fabric.IObject {
   return new fabric.Circle({
     radius: options.player.radius,
     fill: player.color,

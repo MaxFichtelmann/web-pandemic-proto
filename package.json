@@ -14,8 +14,7 @@
   },
   "author": "",
   "dependencies": {
-    "fabric": "^1.6.3",
-    "wolfy87-eventemitter": "^5.1.0"
+    "fabric": "^1.6.3"
   },
   "devDependencies": {
     "browserify": "^13.1.0",

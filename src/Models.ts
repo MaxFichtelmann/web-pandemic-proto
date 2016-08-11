@@ -1,10 +1,13 @@
+export type CityName = string
+export type PlayerName = string
+
 export class City {
-    name: string
+    name: CityName
     x: number
     y: number
 }
 
 export class Player {
-    name: string
+    name: PlayerName
     color: string
 }
