@@ -82,7 +82,7 @@ const max = {
 for (const cityName of Object.keys(cities)) {
   const city = cities[cityName]
   ui.addCity(city, () => {
-    if (max.city) {
+    if (max.city && max.city.links.indexOf(city.name) >= 0) {
       max.city = null;
       ui.movePlayer(max, city)
       .then(() => {
