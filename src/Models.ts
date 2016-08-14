@@ -10,4 +10,5 @@ export class City {
 export class Player {
     name: PlayerName
     color: string
+    city: City
 }
