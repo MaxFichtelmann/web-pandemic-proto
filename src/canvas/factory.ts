@@ -1,5 +1,7 @@
 import {Player, City} from '../Models'
 
+export type CityShape = fabric.IGroup
+
 export const options = {
   scale: 25,
   city: {
@@ -22,7 +24,7 @@ export const options = {
   }
 }
 
-export function createCity(city: City): fabric.IObject {
+export function createCity(city: City): CityShape {
   const circle = new fabric.Circle({
     radius: options.city.radius,
     fill: options.city.color,
@@ -53,5 +55,17 @@ export function createPlayer(player: Player, city: City): fabric.IObject {
     selectable: false,
     left: city.x * options.scale + options.gap,
     top: city.y * options.scale + options.gap
+  })
+}
+
+export function createLink(source: CityShape, target: CityShape): fabric.IObject {
+  return new fabric.Line([
+    source.left + options.city.radius,
+    source.top + options.city.radius,
+    target.left + options.city.radius,
+    target.top + options.city.radius
+  ], {
+    stroke: 'black',
+    selectable: false
   })
 }

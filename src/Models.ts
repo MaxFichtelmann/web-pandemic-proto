@@ -5,6 +5,7 @@ export class City {
     name: CityName
     x: number
     y: number
+    links: Array<CityName>
 }
 
 export class Player {
