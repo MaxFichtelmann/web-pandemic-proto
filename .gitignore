@@ -4,7 +4,8 @@ build
 app/js
 /bower_components/
 /node_modules/
-/.pulp-cache/
 /output/
+/.pulp-cache/
 /.psci*
+/.psc-ide-port
 /src/.webpack.js
