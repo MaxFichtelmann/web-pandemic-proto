@@ -1,3 +1,3 @@
 window.fabric = require('fabric').fabric
-window.pandemic = require('./output/Pandemic')
+window.Pandemic = require('./output/Pandemic')
 require('./build')
