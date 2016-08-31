@@ -2,8 +2,8 @@
 
 import * as ui from './canvas/ui'
 import { City, State, Event, MovePlayerEvent, MovePlayer, Player, Action } from './DataTypes';
-import { Pandemic } from './pandemic.d';
 import * as eventlog from './eventlog';
+declare var Pandemic: any;
 
 const cities: { [id: string]: City } = {
     leipzig: {
@@ -97,7 +97,7 @@ for (const cityName of Object.keys(cities)) {
           type: 'MovePlayer',
           data: new MovePlayerEvent(currentPlayer.name, city.name)
         };
-        let reaction = Pandemic.react({
+        let reaction = Pandemic.reactions({
           event,
           state
         });
@@ -106,17 +106,15 @@ for (const cityName of Object.keys(cities)) {
 }
 
 eventlog.subscribe(MovePlayer.TYPE, (action: Action) => {
-  if (action.data instanceof MovePlayer) {
-    let movePlayer: MovePlayer = action.data
+    let movePlayer: any = action.data
     let player = Object.keys(players).map(name => players[name])
-                    .find(player => player.name === movePlayer.player)
+                    .find(player => player.name === movePlayer.player.name)
     let destination = Object.keys(cities).map(name => cities[name])
-                    .find(city => city.name === movePlayer.destination)
+                    .find(city => city.name === movePlayer.destination.name)
     if (player) {
       ui.movePlayer(player, destination)
         .then(() => console.log('moved ', player, ' to', destination))
     }
-  }
 })
 
 for (const playerName of Object.keys(players)) {
