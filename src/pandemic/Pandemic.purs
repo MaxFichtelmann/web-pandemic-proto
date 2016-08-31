@@ -1,6 +1,14 @@
 module Pandemic where
 
+import Prelude
+import Data.Maybe
+import Data.Foldable
+
 newtype CityName = CityName String
+instance eqCityName :: Eq CityName where
+  eq (CityName city1) (CityName city2) = city1 == city2
+
+
 newtype PlayerName = PlayerName String
 type City = {
   name  :: CityName,
@@ -53,7 +61,7 @@ processEvent state event = {
     data: {
       player: state.currentPlayer,
 -- TODO set destination as the city with the name from the action
-      destination: event.data.destination
+      destination: fromMaybe { name: CityName "nowhere", links: [] } (find (\city -> city.name == event.data.destination) state.map)
     }
   }
 
