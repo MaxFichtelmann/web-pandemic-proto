@@ -83,24 +83,21 @@ const players: {[name: string]: Player} = {
   }
 }
 
-let currentPlayer = players['max']
+let currentPlayer = players['max'].name
 
 for (const cityName of Object.keys(cities)) {
     const city = cities[cityName]
     ui.addCity(city, () => {
         let state: State = {
-          map: Object.keys(cities).map(name => cities[name]),
+          cities: Object.keys(cities).map(name => cities[name]),
           players: Object.keys(players).map(name => players[name]),
           currentPlayer
         };
         let event: Event = {
           type: 'MovePlayer',
-          data: new MovePlayerEvent(currentPlayer.name, city.name)
+          data: new MovePlayerEvent(currentPlayer, city.name)
         };
-        let reaction = Pandemic.reactions({
-          event,
-          state
-        });
+        let reaction = Pandemic.reactions(state)(event)
         eventlog.log(reaction)
     });
 }

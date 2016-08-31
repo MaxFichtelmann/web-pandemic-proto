@@ -1,15 +1,18 @@
 module Pandemic where
 
-import Prelude
-import Data.Maybe
-import Data.Foldable
+import Prelude ((==), class Eq)
+import Data.Maybe (fromJust)
+import Data.Foldable (find, class Foldable)
+import Partial.Unsafe (unsafePartial)
 
 newtype CityName = CityName String
 instance eqCityName :: Eq CityName where
-  eq (CityName city1) (CityName city2) = city1 == city2
-
+  eq (CityName a) (CityName b) = a == b
 
 newtype PlayerName = PlayerName String
+instance eqPlayerName :: Eq PlayerName where
+  eq (PlayerName a) (PlayerName b) = a == b
+
 type City = {
   name  :: CityName,
   links :: Array CityName
@@ -17,18 +20,13 @@ type City = {
 
 type Player = {
   name :: PlayerName,
-  city :: City
+  city :: CityName
 }
 
 type State = {
-  map :: Array City,
+  cities :: Array City,
   players :: Array Player,
-  currentPlayer :: Player
-}
-
-type Message = {
-  event :: Event,
-  state :: State
+  currentPlayer :: PlayerName
 }
 
 -- inbound event types
@@ -43,27 +41,24 @@ type Event = {
 }
 
 -- outbound action types
-type MovePlayer = {
+type MovePlayerAction = {
   player      :: Player,
   destination :: City
 }
 
 type Action = {
   type :: String,
-  data :: MovePlayer
+  data :: MovePlayerAction
 }
 
-data Reaction = MovePlayer City
-
-processEvent :: State -> Event -> Action
-processEvent state event = {
+reactions :: State -> Event -> Action
+reactions state event = {
     type: "MovePlayer",
     data: {
-      player: state.currentPlayer,
--- TODO set destination as the city with the name from the action
-      destination: fromMaybe { name: CityName "nowhere", links: [] } (find (\city -> city.name == event.data.destination) state.map)
+      player: unsafeFind (\p -> state.currentPlayer == p.name) state.players,
+      destination: unsafeFind (\city -> city.name == event.data.destination) state.cities
     }
   }
 
-reactions :: Message -> Action
-reactions message = processEvent message.state message.event
+unsafeFind :: forall a f. Foldable f => (a -> Boolean) -> f a -> a
+unsafeFind pred foldable = unsafePartial (fromJust (find pred foldable))

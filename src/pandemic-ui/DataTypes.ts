@@ -32,9 +32,9 @@ export class Event {
 }
 
 export class State {
-  map: Array<City>
+  cities: Array<City>
   players: Array<Player>
-  currentPlayer: Player
+  currentPlayer: PlayerName
 }
 
 export class Message {
