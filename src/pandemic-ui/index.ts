@@ -85,6 +85,9 @@ for (const city of cities) {
     })
 }
 
+for (const link of links) {
+    ui.addLink(link[0], link[1])
+}
 
 eventlog.subscribe(MovePlayer.TYPE, (action: Action) => {
     let movePlayer: any = action.data
