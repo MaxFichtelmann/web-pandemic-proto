@@ -1,8 +1,9 @@
 module Pandemic where
 
 import Prelude ((==), class Eq)
-import Data.Maybe (fromJust)
 import Data.Foldable (find, class Foldable)
+import Data.Maybe (fromJust)
+import Data.Tuple
 import Partial.Unsafe (unsafePartial)
 
 newtype CityName = CityName String
@@ -23,8 +24,12 @@ type Player = {
   city :: CityName
 }
 
-type State = {
+type Setup = {
   cities :: Array City,
+  links :: Array (Tuple CityName CityName)
+}
+
+type State = {
   players :: Array Player,
   currentPlayer :: PlayerName
 }
@@ -51,12 +56,12 @@ type Action = {
   data :: MovePlayerAction
 }
 
-reactions :: State -> Event -> Action
-reactions state event = {
+reactions :: Setup -> State -> Event -> Action
+reactions setup state event = {
     type: "MovePlayer",
     data: {
       player: unsafeFind (\p -> state.currentPlayer == p.name) state.players,
-      destination: unsafeFind (\city -> city.name == event.data.destination) state.cities
+      destination: unsafeFind (\city -> city.name == event.data.destination) setup.cities
     }
   }
 
