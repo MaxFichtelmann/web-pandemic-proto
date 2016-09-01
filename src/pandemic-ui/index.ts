@@ -5,8 +5,8 @@ import { City, State, Event, MovePlayerEvent, MovePlayer, Player, Action } from 
 import * as eventlog from './eventlog';
 declare var Pandemic: any;
 
-const cities: { [id: string]: City } = {
-    leipzig: {
+const cities: Array<City> = [
+    {
         name: 'Leipzig',
         x: 12,
         y: 10,
@@ -16,7 +16,7 @@ const cities: { [id: string]: City } = {
             'Essen'
         ]
     },
-    tennenlohe: {
+    {
         name: 'Tennenlohe',
         x: 10,
         y: 14,
@@ -26,7 +26,7 @@ const cities: { [id: string]: City } = {
             'Karlsruhe'
         ]
     },
-    berlin: {
+    {
         name: 'Berlin',
         x: 14,
         y: 6,
@@ -35,7 +35,7 @@ const cities: { [id: string]: City } = {
             'Leipzig'
         ]
     },
-    hamburg: {
+    {
         name: 'Hamburg',
         x: 9,
         y: 4,
@@ -44,7 +44,7 @@ const cities: { [id: string]: City } = {
             'Essen'
         ]
     },
-    essen: {
+    {
         name: 'Essen',
         x: 4,
         y: 9,
@@ -54,7 +54,7 @@ const cities: { [id: string]: City } = {
             'Leipzig'
         ]
     },
-    karlsruhe: {
+    {
         name: 'Karlsruhe',
         x: 6,
         y: 15,
@@ -64,7 +64,7 @@ const cities: { [id: string]: City } = {
             'M\u00fcnchen'
         ]
     },
-    muenchen: {
+    {
         name: 'M\u00fcnchen',
         x: 11,
         y: 18,
@@ -73,23 +73,22 @@ const cities: { [id: string]: City } = {
             'Karlsruhe'
         ]
     }
-}
+]
 
 const players: {[name: string]: Player} = {
   max: {
       name: 'Max',
       color: 'blue',
-      city: cities['leipzig']
+      city: cities[1]
   }
 }
 
 let currentPlayer = players['max'].name
 
-for (const cityName of Object.keys(cities)) {
-    const city = cities[cityName]
+for (const city of cities) {
     ui.addCity(city, () => {
         let state: State = {
-          cities: Object.keys(cities).map(name => cities[name]),
+          cities: cities,
           players: Object.keys(players).map(name => players[name]),
           currentPlayer
         };
@@ -106,8 +105,7 @@ eventlog.subscribe(MovePlayer.TYPE, (action: Action) => {
     let movePlayer: any = action.data
     let player = Object.keys(players).map(name => players[name])
                     .find(player => player.name === movePlayer.player.name)
-    let destination = Object.keys(cities).map(name => cities[name])
-                    .find(city => city.name === movePlayer.destination.name)
+    let destination = cities.find(city => city.name === movePlayer.destination.name)
     if (player) {
       ui.movePlayer(player, destination)
         .then(() => console.log('moved ', player, ' to', destination))
@@ -118,6 +116,3 @@ for (const playerName of Object.keys(players)) {
   const player = players[playerName]
   ui.addPlayer(player, player.city)
 }
-
-
-console.log('created cities')
