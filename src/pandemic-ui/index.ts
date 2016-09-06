@@ -104,3 +104,11 @@ for (const playerName of Object.keys(players)) {
     const player = players[playerName]
     ui.addPlayer(player, player.city)
 }
+
+ui.setDiseaseIndicatorsFor("Essen", [{
+  color: "red",
+  count: 3
+}, {
+  color: "blue",
+  count: 2
+}])
