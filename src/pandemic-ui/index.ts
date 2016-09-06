@@ -97,6 +97,7 @@ actionlog.subscribe(MovePlayer.TYPE, (action: Action) => {
     if (player) {
         ui.movePlayer(player, destination)
             .then(() => console.log("moved ", player, " to", destination))
+            .then(markReachableCities)
     }
 })
 
@@ -112,3 +113,15 @@ ui.setDiseaseIndicatorsFor("Essen", [{
   color: "blue",
   count: 2
 }])
+
+markReachableCities()
+
+function markReachableCities() {
+    var position = players["max"].city
+    let setup = {
+        cities: cities,
+        links: links
+    }
+    var reachableCities = Pandemic.reachableCities(position)(setup)
+    console.log(reachableCities)
+}

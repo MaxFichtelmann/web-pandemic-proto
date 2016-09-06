@@ -67,3 +67,6 @@ reactions setup state event = {
 
 unsafeFind :: forall a f. Foldable f => (a -> Boolean) -> f a -> a
 unsafeFind pred foldable = unsafePartial (fromJust (find pred foldable))
+
+reachableCities :: City -> Setup -> Array City
+reachableCities position { cities, links } = []
