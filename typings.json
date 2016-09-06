@@ -1,6 +1,5 @@
 {
   "globalDependencies": {
-    "fabricjs": "registry:dt/fabricjs#1.5.0+20160317120654",
-    "wolfy87-eventemitter": "registry:dt/wolfy87-eventemitter#4.2.9+20160524142429"
+    "fabricjs": "registry:dt/fabricjs#1.5.0+20160317120654"
   }
 }
