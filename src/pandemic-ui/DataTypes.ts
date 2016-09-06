@@ -14,6 +14,11 @@ export class Player {
     city: City
 }
 
+export class DiseaseIndicator {
+  color: string
+  count: number
+}
+
 export interface EventData {}
 
 export class MovePlayerEvent implements EventData {
