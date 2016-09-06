@@ -9,7 +9,9 @@
   "dependencies": {
     "purescript-console": "^1.0.0",
     "purescript-maybe": "^1.0.0",
-    "purescript-foldable-traversable": "^1.0.0"
+    "purescript-foldable-traversable": "^1.0.0",
+    "purescript-tuples": "^1.0.0",
+    "purescript-partial": "^1.1.2"
   },
   "devDependencies": {
     "purescript-psci-support": "^1.0.0"
