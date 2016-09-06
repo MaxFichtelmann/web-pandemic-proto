@@ -1,4 +1,4 @@
-import {Player, City} from '../DataTypes';
+import {Player, City, DiseaseIndicator} from '../DataTypes';
 
 export type CityShape = fabric.IGroup
 
@@ -8,7 +8,9 @@ export const options = {
     get radius() {
       return options.scale * 2 / 5
     },
-    borderSize: 1,
+    get borderSize() {
+      return options.scale / 20
+    },
     borderColor: 'black',
     color: 'palegreen'
   },
@@ -16,6 +18,15 @@ export const options = {
     get radius() {
       return options.scale * 3 / 10
     }
+  },
+  diseaseIndicator: {
+    get width() {
+      return options.city.radius
+    },
+    get height() {
+      return options.diseaseIndicator.width / 2
+    },
+    borderColor: 'black'
   },
   get gap() {
     return options.city.radius
@@ -35,10 +46,11 @@ export function createCity(city: City): CityShape {
   })
 
   const text = new fabric.Text(city.name, {
-    originX: 'left',
     originY: 'center',
+    left: options.gap,
     fontFamily: 'sans',
-    fontSize: 10
+    fontSize: options.city.radius,
+    fontWeight: "bold"
   })
 
   return new fabric.Group([circle, text], {
@@ -46,6 +58,47 @@ export function createCity(city: City): CityShape {
     top: city.y * options.scale,
     selectable: false
   })
+}
+
+export function setDiseaseIndicators(city: CityShape, indicators: Array<DiseaseIndicator>): void {
+  const objects = city.getObjects()
+  const text = objects[1]
+  objects.slice(2)
+    .forEach(group => city.remove(group))
+
+  let lastGroup
+  for (const indicator of indicators) {
+    let lastIndicatorShape: fabric.IRect
+    const shapes: Array<fabric.IRect> = []
+    for (let i=0; i< indicator.count; i++) {
+      const indicatorShape = new fabric.Rect({
+        originY: "center",
+        top: text.top,
+        width: options.diseaseIndicator.width,
+        height: options.diseaseIndicator.height,
+        fill: indicator.color,
+        stroke: options.diseaseIndicator.borderColor
+      })
+      if (lastIndicatorShape) {
+        indicatorShape.top = lastIndicatorShape.top - indicatorShape.height - options.gap
+      }
+      shapes.push(indicatorShape)
+      lastIndicatorShape = indicatorShape
+    }
+    let left
+    if (lastGroup) {
+      left = lastGroup.left + lastGroup.width + options.gap
+    } else {
+      left = text.left + text.width + options.gap * 2
+    }
+
+    const group = new fabric.Group(shapes, {
+      originY: "center",
+      left: left
+    })
+    city.add(group)
+    lastGroup = group
+  }
 }
 
 export function createPlayer(player: Player, city: City): fabric.IObject {
@@ -65,7 +118,7 @@ export function createLink(source: CityShape, target: CityShape): fabric.IObject
     target.left + options.city.radius,
     target.top + options.city.radius
   ], {
-    stroke: 'black',
+    stroke: 'lightgrey',
     selectable: false
   })
 }

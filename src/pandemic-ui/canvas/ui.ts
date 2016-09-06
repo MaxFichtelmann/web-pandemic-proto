@@ -1,5 +1,5 @@
-import { City, Player, CityName, PlayerName } from "../DataTypes";
-import { createCity, createPlayer, createLink, options, CityShape } from "./factory"
+import { City, Player, CityName, PlayerName, DiseaseIndicator } from "../DataTypes";
+import { createCity, createPlayer, createLink, options, CityShape, setDiseaseIndicators } from "./factory"
 
 class UiCity {
     shape: CityShape
@@ -32,6 +32,15 @@ export function addCity(city: City, onClick: () => void): Promise<City> {
 
         resolve(city)
     })
+}
+
+export function setDiseaseIndicatorsFor(cityName: CityName, indicators: Array<DiseaseIndicator>): Promise<{}> {
+  return new Promise((resolve, reject) => {
+    const city = cities.find(c => c.name === cityName)
+    setDiseaseIndicators(city.shape, indicators)
+    canvas.renderAll()
+    resolve()
+  })
 }
 
 export function addLink(cityName1: CityName, cityName2: CityName): Promise<{}> {
