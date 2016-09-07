@@ -1,8 +1,8 @@
 import { City, Player, CityName, PlayerName, DiseaseIndicator } from "../DataTypes";
-import { createCity, createPlayer, createLink, options, CityShape, setDiseaseIndicators } from "./factory"
+import * as shapes from "./shapes"
 
 class UiCity {
-    shape: CityShape
+    shape: shapes.CityShape
     name: CityName
     onClick: () => void
 }
@@ -19,7 +19,7 @@ const canvas = new fabric.Canvas("canvas")
 
 export function addCity(city: City, onClick: () => void): Promise<City> {
     return new Promise((resolve, reject) => {
-        const shape = createCity(city)
+        const shape = shapes.createCity(city)
         cities.push({
             shape,
             onClick,
@@ -37,7 +37,7 @@ export function addCity(city: City, onClick: () => void): Promise<City> {
 export function setDiseaseIndicatorsFor(cityName: CityName, indicators: Array<DiseaseIndicator>): Promise<{}> {
   return new Promise((resolve, reject) => {
     const city = cities.find(c => c.name === cityName)
-    setDiseaseIndicators(city.shape, indicators)
+    shapes.setDiseaseIndicators(city.shape, indicators)
     canvas.renderAll()
     resolve()
   })
@@ -48,7 +48,7 @@ export function addLink(cityName1: CityName, cityName2: CityName): Promise<{}> {
         const city1 = cities.find(c => c.name === cityName1)
         const city2 = cities.find(c => c.name === cityName2)
 
-        const link = createLink(city1.shape, city2.shape)
+        const link = shapes.createLink(city1.shape, city2.shape)
         canvas.add(link)
         link.sendToBack()
 
@@ -58,7 +58,7 @@ export function addLink(cityName1: CityName, cityName2: CityName): Promise<{}> {
 
 export function addPlayer(player: Player, city: City): Promise<{}> {
     return new Promise((resolve, reject) => {
-        const shape = createPlayer(player, city)
+        const shape = shapes.createPlayer(player, city)
         players.push({
             shape,
             name: player.name
@@ -76,8 +76,8 @@ export function movePlayer(player: Player, city: City): Promise<{}> {
         const playerShape = players.find(p => p.name === player.name).shape
 
         playerShape.animate({
-            "left": cityShape.left + options.gap,
-            "top": cityShape.top + options.gap
+            "left": cityShape.left + shapes.options.gap,
+            "top": cityShape.top + shapes.options.gap
         }, {
                 onChange: canvas.renderAll.bind(canvas),
                 onComplete: () => {
