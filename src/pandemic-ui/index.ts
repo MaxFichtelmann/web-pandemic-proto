@@ -1,9 +1,9 @@
 "use strict";
 
 import * as ui from "./canvas/ui"
-import { City, CityName, State, Event, MovePlayerEvent, MovePlayer, Player, Action } from "./DataTypes"
+import { City, CityName, State, Event, MovePlayerEvent, MovePlayer, Player, Action, Setup } from "./DataTypes"
 import * as actionlog from "./actionlog"
-declare var Pandemic: any
+import * as Pandemic from "./Pandemic";
 
 const cities: Array<City> = [
     {
@@ -67,12 +67,12 @@ let currentPlayer = players["max"].name
 
 for (const city of cities) {
     ui.addCity(city, () => {
-        let setup = {
-            cities: cities,
-            links: links
+        let setup: Setup = {
+            cities,
+            links
         }
         let state: State = {
-            cities: cities,
+            cities,
             players: Object.keys(players).map(name => players[name]),
             currentPlayer
         }

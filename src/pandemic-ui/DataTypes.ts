@@ -2,6 +2,11 @@ export type CityName = string
 export type PlayerName = string
 export type EventType = string
 
+export class Setup {
+  cities: Array<City>
+  links: Array<[CityName, CityName]>
+}
+
 export class City {
     name: CityName
     x: number
