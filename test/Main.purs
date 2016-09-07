@@ -1,9 +1,22 @@
 module Test.Main where
 
 import Prelude
-import Control.Monad.Eff (Eff)
-import Control.Monad.Eff.Console (CONSOLE, log)
+import Data.Tuple (Tuple(..))
+import Pandemic
+import Test.QuickCheck (assertEquals, quickCheck', QC)
 
-main :: forall e. Eff (console :: CONSOLE | e) Unit
+cityA :: City
+cityA = City { name: (CityName "A") }
+cityB :: City
+cityB = City { name: (CityName "B") }
+
+testCities :: Array City
+testCities = [ cityA, cityB, City { name: (CityName "C") } ]
+
+testLinks :: Array (Tuple CityName CityName)
+testLinks = [ Tuple (CityName "A") (CityName "B") ]
+
+main :: forall eff. QC eff Unit
 main = do
-  log "You should add some tests."
+  quickCheck' 1 $ assertEquals true $ isReachable testLinks cityA cityB
+  quickCheck' 1 $ assertEquals [ cityB ] $ reachableCities cityA { cities: testCities, links: testLinks }

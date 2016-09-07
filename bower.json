@@ -14,6 +14,7 @@
     "purescript-partial": "^1.1.2"
   },
   "devDependencies": {
-    "purescript-psci-support": "^1.0.0"
+    "purescript-psci-support": "^1.0.0",
+    "purescript-quickcheck": "^1.0.0"
   }
 }
