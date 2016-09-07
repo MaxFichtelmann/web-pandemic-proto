@@ -9,14 +9,17 @@ let nextId: SubscriptionId = 0;
 const subscriptions: {[id: number]: (action: Action) => void } = {}
 const subscribers: {[type: string]: Array<number>} = {}
 
-export function log(action: Action): void {
-  actions.push(action)
-
+function actOn(action: Action) {
   let subs = subscribers[action.type]
   if (subs) {
     subs.map(id => subscriptions[id])
         .forEach(act => act && act(action))
   }
+}
+
+export function log(action: Action): void {
+  actions.push(action)
+  actOn(action)
 }
 
 export function subscribe(type: string, callback: (action: Action) => void): SubscriptionId {

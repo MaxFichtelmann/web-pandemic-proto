@@ -2,7 +2,7 @@
 
 import * as ui from "./canvas/ui"
 import { City, CityName, State, Event, MovePlayerEvent, MovePlayer, Player, Action } from "./DataTypes"
-import * as eventlog from "./eventlog"
+import * as actionlog from "./actionlog"
 declare var Pandemic: any
 
 const cities: Array<City> = [
@@ -81,7 +81,7 @@ for (const city of cities) {
             data: new MovePlayerEvent(currentPlayer, city.name)
         }
         let reaction = Pandemic.reactions(setup)(state)(event)
-        eventlog.log(reaction)
+        actionlog.log(reaction)
     })
 }
 
@@ -89,7 +89,7 @@ for (const link of links) {
     ui.addLink(link[0], link[1])
 }
 
-eventlog.subscribe(MovePlayer.TYPE, (action: Action) => {
+actionlog.subscribe(MovePlayer.TYPE, (action: Action) => {
     let movePlayer: any = action.data
     let player = Object.keys(players).map(name => players[name])
         .find(player => player.name === movePlayer.player.name)
