@@ -28,6 +28,9 @@ export const options = {
     },
     borderColor: 'black'
   },
+  link: {
+    color: 'lightgrey'
+  },
   get gap() {
     return options.city.radius
       + (options.city.borderSize - 1) / 2
@@ -118,7 +121,8 @@ export function createLink(source: CityShape, target: CityShape): fabric.IObject
     target.left + options.city.radius,
     target.top + options.city.radius
   ], {
-    stroke: 'lightgrey',
-    selectable: false
+    stroke: options.link.color,
+    selectable: false,
+    hoverCursor: 'unset'
   })
 }
