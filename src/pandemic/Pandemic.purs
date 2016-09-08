@@ -72,8 +72,8 @@ reactions setup state event = {
 unsafeFind :: forall a f. Foldable f => (a -> Boolean) -> f a -> a
 unsafeFind pred foldable = unsafePartial (fromJust (find pred foldable))
 
-reachableCities :: City -> Setup -> Array City
-reachableCities position { cities, links } = filter (isReachable links position) cities
+reachableCities :: Setup -> City -> Array City
+reachableCities { cities, links } position = filter (isReachable links position) cities
 
 isReachable :: Array (Tuple CityName CityName) -> City -> City -> Boolean
 isReachable links position city = true
