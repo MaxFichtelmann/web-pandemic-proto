@@ -1,8 +1,8 @@
 module Pandemic where
 
-import Prelude ((==), (<>), class Eq, class Show)
+import Prelude ((==), (<>), (&&), (||), class Eq, class Show)
 import Data.Array (filter)
-import Data.Foldable (find, class Foldable)
+import Data.Foldable (any, find, class Foldable)
 import Data.Maybe (fromJust)
 import Data.Tuple
 import Partial.Unsafe (unsafePartial)
@@ -16,7 +16,7 @@ instance eqPlayerName :: Eq PlayerName where
   eq (PlayerName a) (PlayerName b) = a == b
 
 newtype City = City {
-  name  :: CityName
+  name :: CityName
 }
 instance eqCity :: Eq City where
   eq (City a) (City b) = a.name == b.name
@@ -76,4 +76,6 @@ reachableCities :: Setup -> City -> Array City
 reachableCities { cities, links } position = filter (isReachable links position) cities
 
 isReachable :: Array (Tuple CityName CityName) -> City -> City -> Boolean
-isReachable links position city = true
+isReachable links (City position) (City target) = any areConnected links
+  where
+    areConnected (Tuple cn1 cn2) = position.name == cn1 && target.name == cn2 || position.name == cn2 && target.name == cn1

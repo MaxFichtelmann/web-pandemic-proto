@@ -95,6 +95,7 @@ actionlog.subscribe(MovePlayer.TYPE, (action: Action) => {
         .find(player => player.name === movePlayer.player.name)
     let destination = cities.find(city => city.name === movePlayer.destination.name)
     if (player) {
+        player.city = destination
         ui.movePlayer(player, destination)
             .then(() => console.log("moved ", player, " to", destination))
             .then(markReachableCities)
