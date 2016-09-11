@@ -39,9 +39,12 @@ export function setSelectableCities(selectableCities: Array<City>): Promise<{}> 
     for (const city of cities) {
       if (selectableCities.find(sCity => sCity.name === city.name)) {
         city.shape.hoverCursor = "pointer"
+        city.shape.getObjects()[0].fill = shapes.options.city.color
       } else {
         city.shape.hoverCursor = "default"
+        city.shape.getObjects()[0].fill = "lightgrey"
       }
+      canvas.renderAll()
     }
   })
 }
