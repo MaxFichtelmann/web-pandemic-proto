@@ -4,7 +4,7 @@ export type EventType = string
 
 export class Setup {
   cities: Array<City>
-  links: Array<[CityName, CityName]>
+  links: Array<Tuple<CityName, CityName>>
 }
 
 export class City {
@@ -63,4 +63,19 @@ export class MovePlayer implements ActionData {
   type: string = MovePlayer.TYPE
   player: PlayerName
   destination: CityName
+}
+
+export class Tuple<T,V> {
+  value0: T
+  value1: V
+  constructor(value0: T, value1: V) {
+    this.value0 = value0
+    this.value1 = value1
+  }
+
+  static create<T,V>(value0: T): (value1: V) => Tuple<T,V> {
+    return (value1: V) => {
+      return new Tuple(value0, value1)
+    }
+  }
 }

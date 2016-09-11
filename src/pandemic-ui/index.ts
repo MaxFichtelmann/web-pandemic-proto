@@ -1,7 +1,7 @@
 "use strict";
 
 import * as ui from "./canvas/ui"
-import { City, CityName, State, Event, MovePlayerEvent, MovePlayer, Player, Action, Setup } from "./DataTypes"
+import { City, CityName, State, Event, MovePlayerEvent, MovePlayer, Player, Action, Setup, Tuple } from "./DataTypes"
 import * as actionlog from "./actionlog"
 import * as Pandemic from "./Pandemic";
 
@@ -43,16 +43,16 @@ const cities: Array<City> = [
     }
 ]
 
-const links: Array<[CityName, CityName]> = [
-    ["Leipzig", "Berlin"],
-    ["Leipzig", "Tennenlohe"],
-    ["Leipzig", "Essen"],
-    ["Tennenlohe", "Karlsruhe"],
-    ["Tennenlohe", "M\u00fcnchen"],
-    ["Berlin", "Hamburg"],
-    ["Hamburg", "Essen"],
-    ["Essen", "Karlsruhe"],
-    ["Karlsruhe", "M\u00fcnchen"]
+const links: Array<Tuple<CityName, CityName>> = [
+    new Tuple("Leipzig", "Berlin"),
+    new Tuple("Leipzig", "Tennenlohe"),
+    new Tuple("Leipzig", "Essen"),
+    new Tuple("Tennenlohe", "Karlsruhe"),
+    new Tuple("Tennenlohe", "M\u00fcnchen"),
+    new Tuple("Berlin", "Hamburg"),
+    new Tuple("Hamburg", "Essen"),
+    new Tuple("Essen", "Karlsruhe"),
+    new Tuple("Karlsruhe", "M\u00fcnchen")
 ]
 
 const players: { [name: string]: Player } = {
@@ -86,7 +86,7 @@ for (const city of cities) {
 }
 
 for (const link of links) {
-    ui.addLink(link[0], link[1])
+    ui.addLink(link.value0, link.value1)
 }
 
 actionlog.subscribe(MovePlayer.TYPE, (action: Action) => {
