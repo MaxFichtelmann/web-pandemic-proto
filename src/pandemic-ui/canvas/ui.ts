@@ -26,7 +26,11 @@ export function addCity(city: City, onClick: () => void): Promise<City> {
             name: city.name
         })
 
-        shape.on("mouseup", onClick)
+        shape.on("mouseup", () => {
+          if (shape.hoverCursor === "pointer") {
+            onClick()
+          }
+        })
 
         canvas.add(shape)
 
