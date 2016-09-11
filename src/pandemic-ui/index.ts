@@ -124,5 +124,5 @@ function markReachableCities() {
         links: links
     }
     var reachableCities = Pandemic.reachableCities(setup, position)
-    console.log(reachableCities)
+    ui.setSelectableCities(reachableCities)
 }

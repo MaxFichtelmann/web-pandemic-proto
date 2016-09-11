@@ -34,6 +34,18 @@ export function addCity(city: City, onClick: () => void): Promise<City> {
     })
 }
 
+export function setSelectableCities(selectableCities: Array<City>): Promise<{}> {
+  return new Promise((resolve, reject) => {
+    for (const city of cities) {
+      if (selectableCities.find(sCity => sCity.name === city.name)) {
+        city.shape.hoverCursor = "pointer"
+      } else {
+        city.shape.hoverCursor = "default"
+      }
+    }
+  })
+}
+
 export function setDiseaseIndicatorsFor(cityName: CityName, indicators: Array<DiseaseIndicator>): Promise<{}> {
   return new Promise((resolve, reject) => {
     const city = cities.find(c => c.name === cityName)
