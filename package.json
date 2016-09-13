@@ -4,7 +4,7 @@
   "description": "prototype for pandemic inspired implementation using web technologies",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "pulp test",
     "postinstall": "typings install && bower install && npm run build",
     "build": "tsc && pulp build && mkdirp app/js && browserify index.js -o app/js/index.js",
     "watch": "chokidar 'src/**' -c 'npm run build' --initial",
