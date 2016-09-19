@@ -6,26 +6,24 @@ import * as actionlog from "./actionlog"
 import * as Pandemic from "./Pandemic";
 import {setup} from './setup';
 
-const players: { [name: string]: Player } = {
-    max: {
+const players: Player[] = [{
         name: "Max",
         color: "blue",
         city: setup.cities[0]
-    }
-}
+    }]
 
-let currentPlayer = players["max"].name
+let currentPlayer = players[0]
 
 for (const city of setup.cities) {
     ui.addCity(city, () => {
         let state: State = {
             cities: setup.cities,
-            players: Object.keys(players).map(name => players[name]),
-            currentPlayer
+            players,
+            currentPlayer: currentPlayer.name
         }
         let event: Event = {
             type: "MovePlayer",
-            data: new MovePlayerEvent(currentPlayer, city.name)
+            data: new MovePlayerEvent(currentPlayer.name, city.name)
         }
         let reaction = Pandemic.reactions(setup)(state)(event)
         actionlog.log(reaction)
@@ -38,8 +36,7 @@ for (const link of setup.links) {
 
 actionlog.subscribe(MovePlayer.TYPE, (action: Action) => {
     let movePlayer: any = action.data
-    let player = Object.keys(players).map(name => players[name])
-        .find(player => player.name === movePlayer.player.name)
+    let player = players.find(player => player.name === movePlayer.player.name)
     let destination = setup.cities.find(city => city.name === movePlayer.destination.name)
     if (player) {
         player.city = destination
@@ -49,8 +46,7 @@ actionlog.subscribe(MovePlayer.TYPE, (action: Action) => {
     }
 })
 
-for (const playerName of Object.keys(players)) {
-    const player = players[playerName]
+for (const player of players) {
     ui.addPlayer(player, player.city)
 }
 
@@ -65,7 +61,7 @@ ui.setDiseaseIndicatorsFor("Essen", [{
 markReachableCities()
 
 function markReachableCities() {
-    var position = players["max"].city
+    var position = currentPlayer.city
     var reachableCities = Pandemic.reachableCities(setup, position)
     ui.setSelectableCities(reachableCities)
 }
