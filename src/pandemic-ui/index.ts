@@ -10,6 +10,10 @@ const players: Player[] = [{
         name: "Max",
         color: "blue",
         city: setup.cities[0]
+    }, {
+        name: "Stefan",
+        color: "red",
+        city: setup.cities.find(city => city.name === "Tennenlohe")
     }]
 
 let currentPlayer = players[0]
@@ -27,6 +31,7 @@ for (const city of setup.cities) {
         }
         let reaction = Pandemic.reactions(setup)(state)(event)
         actionlog.log(reaction)
+        currentPlayer = players.find(player => player !== currentPlayer)
     })
 }
 
