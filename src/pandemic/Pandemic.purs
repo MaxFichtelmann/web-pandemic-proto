@@ -1,6 +1,6 @@
 module Pandemic where
 
-import Prelude ((==), (<>), (&&), (||), class Eq, class Show)
+import Prelude ((==), not, (<>), (&&), (||), class Eq, class Show)
 import Data.Array (filter)
 import Data.Foldable (any, find, class Foldable)
 import Data.Maybe (fromJust)
@@ -55,19 +55,28 @@ type MovePlayerAction = {
   destination :: City
 }
 
+type ChangePlayerAction = {
+  player      :: Player
+}
+
 type Action = {
   type :: String,
   data :: MovePlayerAction
 }
 
-reactions :: Setup -> State -> Event -> Action
-reactions setup state event = {
+reactions :: Setup -> State -> Event -> Array Action
+reactions setup state event = [{
     type: "MovePlayer",
     data: {
       player: unsafeFind (\p -> state.currentPlayer == p.name) state.players,
       destination: unsafeFind (\city -> case city of (City { name }) -> name == event.data.destination) setup.cities
     }
-  }
+  }, {
+    type: "ChangePlayer",
+    data: {
+      player: unsafeFind (\p -> not (state.currentPlayer == p.name)) state.players
+    }
+  }]
 
 unsafeFind :: forall a f. Foldable f => (a -> Boolean) -> f a -> a
 unsafeFind pred foldable = unsafePartial (fromJust (find pred foldable))

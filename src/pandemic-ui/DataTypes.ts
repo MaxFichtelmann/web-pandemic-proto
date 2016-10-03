@@ -65,6 +65,12 @@ export class MovePlayer implements ActionData {
   destination: CityName
 }
 
+export class ChangePlayer implements ActionData {
+  static get TYPE(): string { return 'ChangePlayer' }
+  type: string = ChangePlayer.TYPE
+  player: PlayerName
+}
+
 export class Tuple<T,V> {
   value0: T
   value1: V

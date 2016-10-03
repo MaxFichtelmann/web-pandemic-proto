@@ -1,7 +1,7 @@
 "use strict";
 
 import * as ui from "./canvas/ui"
-import { City, CityName, State, Event, MovePlayerEvent, MovePlayer, Player, Action, Setup, Tuple } from "./DataTypes"
+import { City, CityName, State, Event, MovePlayerEvent, MovePlayer, ChangePlayer, Player, Action, Setup, Tuple } from "./DataTypes"
 import * as actionlog from "./actionlog"
 import * as Pandemic from "./Pandemic";
 import {setup} from './setup';
@@ -9,7 +9,7 @@ import {setup} from './setup';
 const players: Player[] = [{
         name: "Max",
         color: "blue",
-        city: setup.cities[0]
+        city: setup.cities.find(city => city.name === "Leipzig")
     }, {
         name: "Stefan",
         color: "red",
@@ -31,7 +31,6 @@ for (const city of setup.cities) {
         }
         let reaction = Pandemic.reactions(setup)(state)(event)
         actionlog.log(reaction)
-        currentPlayer = players.find(player => player !== currentPlayer)
     })
 }
 
@@ -49,6 +48,12 @@ actionlog.subscribe(MovePlayer.TYPE, (action: Action) => {
             .then(() => console.log("moved ", player, " to", destination))
             .then(markReachableCities)
     }
+})
+actionlog.subscribe(ChangePlayer.TYPE, (action: Action) => {
+  let changePlayer:any = action.data
+  let player = players.find(player => player.name === changePlayer.player.name)
+
+  currentPlayer = player
 })
 
 for (const player of players) {

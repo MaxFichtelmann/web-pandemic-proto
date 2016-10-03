@@ -17,9 +17,11 @@ function actOn(action: Action) {
   }
 }
 
-export function log(action: Action): void {
-  actions.push(action)
-  actOn(action)
+export function log(actions: Array<Action>): void {
+  actions.forEach(action => {
+    actions.push(action)
+    actOn(action)
+  })
 }
 
 export function subscribe(type: string, callback: (action: Action) => void): SubscriptionId {

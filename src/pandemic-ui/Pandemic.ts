@@ -1,10 +1,10 @@
 declare var Pandemic: any
 
-import { City, State, Setup, Event } from './DataTypes';
+import { City, State, Setup, Event, Action } from './DataTypes';
 
 export function reactions(setup: Setup) {
     return (state: State) => {
-        return (event: Event) => {
+        return (event: Event): Array<Action> => {
             return Pandemic.reactions(setup)(state)(event)
         }
     }
