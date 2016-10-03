@@ -21,7 +21,7 @@ newtype City = City {
 instance eqCity :: Eq City where
   eq (City a) (City b) = a.name == b.name
 instance showCity :: Show City where
-  show (City { name }) = case name of (CityName n) -> "City(" <> n <> ")"
+  show (City { name : (CityName cn) }) = "City(" <> cn <> ")"
 
 type Player = {
   name :: PlayerName,
