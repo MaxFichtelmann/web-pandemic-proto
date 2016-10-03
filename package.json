@@ -7,7 +7,7 @@
     "test": "pulp test",
     "postinstall": "typings install && bower install && npm run build",
     "build": "tsc && pulp build && mkdirp app/js && browserify index.js -o app/js/index.js",
-    "watch": "chokidar 'src/**' -c 'npm run build' --initial",
+    "watch": "chokidar \"src/**\" -c \"npm run build\" --initial",
     "livereload": "livereload app -w 200",
     "clean": "rimraf app/js build output",
     "mrproper": "npm run clean && rimraf node_modules typings .pulp-cache bower_components"
