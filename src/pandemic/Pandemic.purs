@@ -50,30 +50,28 @@ type Event = {
 }
 
 -- outbound action types
-type MovePlayerAction = {
-  player      :: Player,
-  destination :: City
-}
+data Action = MovePlayerAction { player :: Player, destination :: City }
+            | ChangePlayerAction { player :: Player }
 
-type ChangePlayerAction = {
-  player      :: Player
-}
-
-type Action = {
+type TaggedAction = {
   type :: String,
-  data :: MovePlayerAction
+  data :: Action
 }
 
-reactions :: Setup -> State -> Event -> Array Action
+toTag :: Action -> String
+toTag (MovePlayerAction _) = "MovePlayer"
+toTag (ChangePlayerAction _) = "ChangePlayer"
+
+reactions :: Setup -> State -> Event -> Array TaggedAction
 reactions setup state event = [{
     type: "MovePlayer",
-    data: {
+    data: MovePlayerAction {
       player: unsafeFind (\p -> state.currentPlayer == p.name) state.players,
       destination: unsafeFind (\city -> case city of (City { name }) -> name == event.data.destination) setup.cities
     }
   }, {
     type: "ChangePlayer",
-    data: {
+    data: ChangePlayerAction {
       player: unsafeFind (\p -> not (state.currentPlayer == p.name)) state.players
     }
   }]
