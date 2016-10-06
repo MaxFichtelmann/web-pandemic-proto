@@ -53,7 +53,11 @@ export class Message {
 
 export class Action {
   type: string
-  data: ActionData
+  data: TaggedActionData
+}
+
+export interface TaggedActionData {
+  value0: ActionData
 }
 
 export interface ActionData {}

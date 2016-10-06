@@ -39,7 +39,7 @@ for (const link of setup.links) {
 }
 
 actionlog.subscribe(MovePlayer.TYPE, (action: Action) => {
-    let movePlayer: any = action.data
+    let movePlayer: any = action.data.value0;
     let player = players.find(player => player.name === movePlayer.player.name)
     let destination = setup.cities.find(city => city.name === movePlayer.destination.name)
     if (player) {
@@ -50,7 +50,7 @@ actionlog.subscribe(MovePlayer.TYPE, (action: Action) => {
     }
 })
 actionlog.subscribe(ChangePlayer.TYPE, (action: Action) => {
-  let changePlayer:any = action.data
+  let changePlayer: any = action.data.value0;
   let player = players.find(player => player.name === changePlayer.player.name)
 
   currentPlayer = player

@@ -1,6 +1,6 @@
 module Test.Main where
 
-import Prelude (Unit, bind, ($))
+import Prelude
 import Data.Tuple (Tuple(..))
 import Pandemic (City(..), CityName(..), reachableCities, isReachable)
 import Test.QuickCheck (assertEquals, quickCheck', QC)
