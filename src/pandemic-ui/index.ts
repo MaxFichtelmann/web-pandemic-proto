@@ -29,8 +29,8 @@ for (const city of setup.cities) {
             type: "MovePlayer",
             data: new MovePlayerEvent(currentPlayer.name, city.name)
         }
-        let reaction = Pandemic.reactions(setup)(state)(event)
-        actionlog.log(reaction)
+        let reactions = Pandemic.reactions(setup)(state)(event)
+        actionlog.log(reactions)
     })
 }
 
