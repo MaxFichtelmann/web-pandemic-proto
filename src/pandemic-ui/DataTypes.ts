@@ -3,6 +3,7 @@ export type PlayerName = string
 export type EventType = string
 
 export class Setup {
+  players: Array<Player>
   cities: Array<City>
   links: Array<Tuple<CityName, CityName>>
 }
@@ -16,7 +17,6 @@ export class City {
 export class Player {
     name: PlayerName
     color: string
-    city: City
 }
 
 export class DiseaseIndicator {
@@ -42,8 +42,8 @@ export class Event {
 
 export class State {
   cities: Array<City>
-  players: Array<Player>
   currentPlayer: PlayerName
+  playerLocations: Array<Tuple<PlayerName, CityName>>
 }
 
 export class Message {

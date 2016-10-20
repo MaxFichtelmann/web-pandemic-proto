@@ -11,10 +11,6 @@ newtype CityName = CityName String
 instance eqCityName :: Eq CityName where
   eq (CityName a) (CityName b) = a == b
 
-newtype PlayerName = PlayerName String
-instance eqPlayerName :: Eq PlayerName where
-  eq (PlayerName a) (PlayerName b) = a == b
-
 newtype City = City {
   name :: CityName
 }
@@ -23,19 +19,23 @@ instance eqCity :: Eq City where
 instance showCity :: Show City where
   show (City { name : (CityName cn) }) = "City(" <> cn <> ")"
 
-type Player = {
-  name :: PlayerName,
-  city :: CityName
+newtype PlayerName = PlayerName String
+instance eqPlayerName :: Eq PlayerName where
+  eq (PlayerName a) (PlayerName b) = a == b
+
+newtype Player = Player {
+  name :: PlayerName
 }
 
 type Setup = {
+  players :: Array Player,
   cities :: Array City,
   links :: Array (Tuple CityName CityName)
 }
 
 type State = {
-  players :: Array Player,
-  currentPlayer :: PlayerName
+  currentPlayer :: PlayerName,
+  playerLocations :: Array (Tuple PlayerName CityName)
 }
 
 -- inbound event types
@@ -67,11 +67,11 @@ reactions setup state event = map wrapInTaggedAction actions
   where
     wrapInTaggedAction action = { type: toTag action, data: action }
     actions = [ MovePlayerAction {
-                  player: unsafeFind (\p -> state.currentPlayer == p.name) state.players,
+                  player: unsafeFind (\p -> case p of (Player { name }) -> name == state.currentPlayer) setup.players,
                   destination: unsafeFind (\city -> case city of (City { name }) -> name == event.data.destination) setup.cities
                 }
               , ChangePlayerAction {
-                  player: unsafeFind (\p -> not (state.currentPlayer == p.name)) state.players
+                  player: unsafeFind (\p -> case p of (Player { name }) -> not (state.currentPlayer == name)) setup.players
                 }
               ]
 
