@@ -67,11 +67,11 @@ reactions setup state event = map wrapInTaggedAction actions
   where
     wrapInTaggedAction action = { type: toTag action, data: action }
     actions = [ MovePlayerAction {
-                  player: unsafeFind (\p -> case p of (Player { name }) -> name == state.currentPlayer) setup.players,
-                  destination: unsafeFind (\city -> case city of (City { name }) -> name == event.data.destination) setup.cities
+                  player: unsafeFind (\(Player { name }) -> name == state.currentPlayer) setup.players,
+                  destination: unsafeFind (\(City { name }) -> name == event.data.destination) setup.cities
                 }
               , ChangePlayerAction {
-                  player: unsafeFind (\p -> case p of (Player { name }) -> not (state.currentPlayer == name)) setup.players
+                  player: unsafeFind (\(Player { name }) -> not (state.currentPlayer == name)) setup.players
                 }
               ]
 
